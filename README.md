@@ -1,5 +1,8 @@
 :warning: **This branch is used for testing**
 
+Tuto to setup the server:
+https://www.youtube.com/watch?v=uAk6nptKDVY
+
 Please go to original project
 
 # SkySaga Emulation R&D

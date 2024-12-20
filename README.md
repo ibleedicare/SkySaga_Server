@@ -1,5 +1,7 @@
-:warning: ** This branch is used for testing **
+:warning: **This branch is used for testing**
+
 Please go to original project
+
 # SkySaga Emulation R&D
 
 This repository for the **research and development** of emulating [SkySaga: Infinite Isles](https://wikipedia.org/wiki/SkySaga:_Infinite_Isles).

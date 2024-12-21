@@ -12,7 +12,10 @@ def map_parameters_to_packet_size(parameters):
             packet_size += len(option["value"])
         else:
             packet_size += 1
-        print(f"Sync Index {option['syncindex']} is parameter {parameter_name}")
+        try:
+            print(f"Sync Index {option['syncindex']} is parameter {parameter_name}")
+        except:
+            print(f"No sync index for parameter {parameter_name}")
     return packet_size
 
         
@@ -32,6 +35,7 @@ def main():
     parser.add_argument("--file", required=True, help="Path to the JSON file.")
     parser.add_argument("--dump-entity", required=False, type=int, help="dump the entity")
     parser.add_argument("--get-entities", required=False, action="store_true")
+    parser.add_argument("--debug", required=False, action="store_true")
 
     args = parser.parse_args()
 
@@ -52,7 +56,8 @@ def main():
             else:
                 print(f"Entity with name '{args.name}' not found.")
         if args.dump_entity:
-            print(json.dumps(data["Entities"][args.dump_entity], indent=4))
+            if args.debug:
+                print(json.dumps(data["Entities"][args.dump_entity], indent=4))
             packet_size = map_parameters_to_packet_size(data["Entities"][args.dump_entity]['parameters'])
             print(f"{data['Entities'][args.dump_entity]['Name']} Packet size {packet_size}")
         if args.get_entities: 

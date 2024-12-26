@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: SkySaga API
+  description: API documentation for SkySaga Web Services
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5164
+    description: Development server
+
+paths:
+  /ping:
+    get:
+      tags:
+        - Healthcheck
+      summary: ping
+      description: ping
+      parameters:
+        - $ref: '#/components/parameters/tokenHeader'
+      responses:
+        '200':
+          description: ping
+  /api/authentication/sgauth/_login:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate the user to smilegate
+      description: Authenticate the user with the retrieve tokenId from /login
+      requestBody:
+        $ref: '#/components/requestBodies/sgauthRequestBody'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /api/authentication/credentials/usernames/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout the user
+      description: This request is sent when the user logout
+      parameters:
+        - $ref: '#/components/parameters/tokenHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emptyObject'
+      responses:
+        '200':
+          description: Successfully logged out
+
+  /api/authentication/applications/names/login:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate user
+      description: Authenticates a user and returns a JWT token
+      parameters:
+        - $ref: '#/components/parameters/tokenHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "password123"
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /api/binary-storage/photos/_whichIsCooler:
+    post:
+      tags:
+      - Binary Storage
+      summary: Compare photo sizes
+      description: This api call is made for voting between 2 picture when lauching the game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authLoginRequestBody'
+      responses:
+        '200':
+          description: Successful comparison
+  /api/matchmaking/userdatacentre/create:
+    post:
+      tags:
+        - Match Making
+      summary: Match making
+      description: Match making
+      parameters:
+        - $ref: '#/components/parameters/tokenHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dataCenterList'
+      responses:
+        '200':
+          description: OK
+  /api/account/get:
+    post:
+      summary: Get account information
+      description: Get account information
+      parameters:
+        - $ref: '#/components/parameters/tokenHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emptyObject'
+      responses:
+        '200':
+          description: OK
+
+components:
+  parameters:
+    tokenHeader:
+      in: header
+      name: X-RWPVT
+      schema:
+        type: string
+      required: true
+      description: Token ID for authentication
+  requestBodies:
+    authLoginRequestBody:
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/authLoginRequestBody'
+    sgauthRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/sgauthRequestBody'
+  schemas:
+    emptyObject:
+      type: object
+      description: Empty request body
+    dataCenterList:
+      type: array
+      items:
+        type: string
+        description: Country code (e.g., UK, FR)
+        example: UK
+    authLoginRequestBody:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: Size parameter for comparison
+          example: 2
+    sgauthRequestBody:
+      type: object
+      properties:
+        tokenId:
+          type: string
+          example: Test123
+    LoginResponse:
+      type: object
+      properties:
+        tokenId:
+          type: string
+          example: "tokenId"
+        refreshingTokenId:
+          type: string
+          example: "refreshingTokenId"
+        timeout:
+          type: integer
+          format: int64
+          example: 999999
+  securitySchemes: {}
+
+tags:
+  - name: Authentication
+    description: Authentication operations
